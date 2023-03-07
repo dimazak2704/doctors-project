@@ -1,17 +1,15 @@
-import com.toedter.calendar.JDayChooser;
-import com.toedter.calendar.JMonthChooser;
+import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
+import java.util.Formatter;
 
 public class test extends JFrame {
 
@@ -19,6 +17,14 @@ public class test extends JFrame {
     static int width = screenSize.width;
     static int height = screenSize.height;
     static boolean but = false;
+
+
+
+
+    static Date mindate = methods.parseDate("2014-02-14");
+    static Date today = new Date();
+    static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    static Date maxdate = methods.parseDate(format.format(today));
 
     public static String [] arr = {"09.00", "09.30", "10.00", "10.30", "11.00", "11.30", "12.00", "12.30", "14.00", "14.30", "15.00", "15.30", "16.00", "16.30", "17.00", "17.30"};
     public static String [] v = {"09.00", "14.30"};
@@ -69,19 +75,57 @@ public class test extends JFrame {
 
 
         JComboBox comboBox = new JComboBox();
-        comboBox.setBounds(500,200,200,40);
-        comboBox.setFont(new Font("Times New Roman", Font.BOLD, 30));
+        comboBox.setBounds(500,150,200,40);
+        comboBox.setFont(new Font("Times New Roman", Font.PLAIN, 30));
+        comboBox.addItem("123");
+        comboBox.addItem("123");
+        comboBox.addItem("123");
+        comboBox.setSelectedItem(null);
+
+        JLabel client_name_label = new JLabel("Введіть повне ім'я пацієнта");
+        client_name_label.setHorizontalAlignment(JLabel.CENTER);
+        client_name_label.setHorizontalTextPosition(JLabel.CENTER);
+        client_name_label.setFont(new Font("Times New Roman", Font.BOLD, 30));
+        client_name_label.setBounds(350,220,500,40);
+
+        JTextField client_name_field = new JTextField();
+        client_name_field.setHorizontalAlignment(JTextField.CENTER);
+        client_name_field.setBounds(350,280,500,40);
+
+        JLabel date_label = new JLabel("Вкажіть дату народження пацієнта");
+        date_label.setBounds(350,350,500,40);
+        date_label.setHorizontalAlignment(JLabel.CENTER);
+        date_label.setHorizontalTextPosition(JLabel.CENTER);
+        date_label.setFont(new Font("Times New Roman", Font.BOLD, 30));
+
+        JDateChooser dateChooser = new JDateChooser();
+        dateChooser.setBounds(525,420,150,50);
+        dateChooser.setSelectableDateRange(mindate,maxdate);
+        dateChooser.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        dateChooser.setDateFormatString("yyyy-MM-dd");
+
+
 
         JButton button = new JButton("Підтвердити");
-        button.setBounds(400,500,400,100);
+        button.setBounds(400,550,400,100);
+
+
+
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Завдання виконано успішно!", "Успіх", JOptionPane.INFORMATION_MESSAGE);
+
+                Date dateFromDateChooser = dateChooser.getDate();
+                String dateString = String.format("%1$tY-%1$tm-%1$td", dateFromDateChooser);
+                System.out.println(dateString);
+                dateChooser.setDate(null);
+
+
+                //JOptionPane.showMessageDialog(null, "Завдання виконано успішно!", "Успіх", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
-        frame.add(label);frame.add(label1);frame.add(comboBox);frame.add(button);
+        frame.add(label);frame.add(label1);frame.add(comboBox);frame.add(button);frame.add(client_name_label);frame.add(client_name_field);frame.add(dateChooser);frame.add(date_label);
         frame.setVisible(true);
     }
 }

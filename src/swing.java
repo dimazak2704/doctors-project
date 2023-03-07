@@ -1,3 +1,4 @@
+import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JDayChooser;
 import com.toedter.calendar.JMonthChooser;
 
@@ -9,7 +10,9 @@ import java.awt.event.ItemEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class swing {
     static final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -27,28 +30,11 @@ public class swing {
 
     static String [] time_array = {"09.00", "09.30", "10.00", "10.30", "11.00", "11.30", "12.00", "12.30", "14.00", "14.30", "15.00", "15.30", "16.00", "16.30", "17.00", "17.30"};
     static ArrayList<String> busy_time_list = new ArrayList<>();
-    public static String[] removeElements(String[] arr, ArrayList<String> frst) {
-        ArrayList<String> result = new ArrayList<>();
-        String[] values = frst.toArray(new String[0]);
 
-        for (String s : arr) {
-            boolean shouldRemove = false;
-
-            for (String value : values) {
-                if (s.equals(value)) {
-                    shouldRemove = true;
-                    break;
-                }
-            }
-
-            if (!shouldRemove) {
-                result.add(s);
-            }
-        }
-
-        return result.toArray(new String[0]);
-    }
-
+    static java.util.Date mindate = methods.parseDate("1923-01-01");
+    static java.util.Date today = new java.util.Date();
+    static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    static Date maxdate = methods.parseDate(format.format(today));
 
     swing () throws SQLException, InterruptedException {
 
@@ -72,12 +58,14 @@ public class swing {
         Statement statement = con.createStatement();
         final ResultSet[] resultSet = {statement.executeQuery("select specialty_name from specialty")};
         while(resultSet[0].next()){CBspecialty.addItem(resultSet[0].getString(1));}
+        CBspecialty.setSelectedItem(null);
 
 
         JComboBox CBdoctor_by_specialty = new JComboBox();
         CBdoctor_by_specialty.setBounds(30,200,400,40);
         CBdoctor_by_specialty.setFont(combobox_font);
         CBdoctor_by_specialty.setVisible(false);
+
 
         CBspecialty.addItemListener(event -> {
             if (event.getStateChange() == ItemEvent.SELECTED) {
@@ -96,6 +84,7 @@ public class swing {
             }
 
         });
+        CBdoctor_by_specialty.setSelectedItem(null);
 
 
         JRadioButton searchLB = new JRadioButton("Пошук за прізвищем");
@@ -116,6 +105,7 @@ public class swing {
         CBdoctor_by_lastname.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         CBdoctor_by_lastname.setVisible(false);
 
+
         search_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -133,6 +123,7 @@ public class swing {
                 CBdoctor_by_lastname_visible = true;
             }
         });
+        CBdoctor_by_lastname.setSelectedItem(null);
 
 
 
@@ -185,12 +176,38 @@ public class swing {
         choose_time_label.setVisible(false);
 
         JComboBox CbTime = new JComboBox();
-        CbTime.setBounds(500,200,200,40);
+        CbTime.setBounds(500,150,200,40);
         CbTime.setVisible(false);
-        CbTime.setFont(label_font);
+        CbTime.setFont(combobox_font);
+
+        JLabel client_name_label = new JLabel("Введіть повне ім'я пацієнта");
+        client_name_label.setHorizontalAlignment(JLabel.CENTER);
+        client_name_label.setHorizontalTextPosition(JLabel.CENTER);
+        client_name_label.setFont(new Font("Times New Roman", Font.BOLD, 30));
+        client_name_label.setBounds(350,220,500,40);
+        client_name_label.setVisible(false);
+
+        JTextField client_name_field = new JTextField();
+        client_name_field.setHorizontalAlignment(JTextField.CENTER);
+        client_name_field.setBounds(350,280,500,40);
+        client_name_field.setFont(combobox_font);
+        client_name_field.setVisible(false);
+
+        JLabel birth_label = new JLabel("Вкажіть дату народження пацієнта");
+        birth_label.setBounds(350,350,500,40);
+        birth_label.setHorizontalAlignment(JLabel.CENTER);
+        birth_label.setHorizontalTextPosition(JLabel.CENTER);
+        birth_label.setFont(new Font("Times New Roman", Font.BOLD, 30));
+        birth_label.setVisible(false);
+
+        JDateChooser dateChooser = new JDateChooser();
+        dateChooser.setBounds(515,420,170,50);
+        dateChooser.setSelectableDateRange(mindate,maxdate);
+        dateChooser.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        dateChooser.setVisible(false);
 
         JButton complete_button = new JButton("Підтвердити");
-        complete_button.setBounds(400,500,400,100);
+        complete_button.setBounds(400,550,400,100);
         complete_button.setFont(label_font);
         complete_button.setVisible(false);
 
@@ -199,7 +216,7 @@ public class swing {
         back_button.setVisible(false);
 
 
-        frame.add(specialty);frame.add(CBspecialty);frame.add(dayChooser);frame.add(monthChooser);frame.add(searchLB);frame.add(searchFld);frame.add(date_label);frame.add(CBdoctor_by_specialty);frame.add(CBdoctor_by_lastname);frame.add(next);frame.add(search_button);frame.add(CbTime);frame.add(back_button);frame.add(doctor_name);frame.add(choose_time_label);frame.add(complete_button);
+        frame.add(specialty);frame.add(CBspecialty);frame.add(dayChooser);frame.add(monthChooser);frame.add(searchLB);frame.add(searchFld);frame.add(CBdoctor_by_specialty);frame.add(CBdoctor_by_lastname);frame.add(next);frame.add(search_button);frame.add(date_label);frame.add(CbTime);frame.add(back_button);frame.add(doctor_name);frame.add(choose_time_label);frame.add(complete_button);frame.add(client_name_label);frame.add(client_name_field);frame.add(birth_label);frame.add(dateChooser);
         frame.setVisible(true);
 
         next.addActionListener(new ActionListener() {
@@ -207,6 +224,8 @@ public class swing {
             public void actionPerformed(ActionEvent e) {
                 CbTime.removeAllItems();
                 busy_time_list.clear();
+                client_name_field.setText("");
+                dateChooser.setDate(null);
 
                 if(choise_group.isSelected(specialty.getModel())){
                     doctor_id = CBdoctor_by_specialty.getSelectedItem().toString();
@@ -237,11 +256,9 @@ public class swing {
                     while(resultSet[0].next()){
                         busy_time_list.add(resultSet[0].getString(1));
                     }
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
+                } catch (SQLException ex) {throw new RuntimeException(ex);}
 
-                String[] avaible_time = removeElements(time_array,busy_time_list);
+                String[] avaible_time = methods.removeElements(time_array,busy_time_list);
                 for (int i = 0; i<avaible_time.length; i++){
                     CbTime.addItem(avaible_time[i]);
                 }
@@ -251,13 +268,12 @@ public class swing {
                     while (resultSet[0].next()){
                         doctor_name.setText(resultSet[0].getString(1)+" "+resultSet[0].getString(2)+" "+resultSet[0].getString(3));
                     }
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
+                } catch (SQLException ex) {throw new RuntimeException(ex);}
 
 
-                specialty.setVisible(false);CBspecialty.setVisible(false);dayChooser.setVisible(false);monthChooser.setVisible(false);searchLB.setVisible(false);searchFld.setVisible(false);search_button.setVisible(false);date_label.setVisible(false);CBdoctor_by_specialty.setVisible(false);CBdoctor_by_lastname.setVisible(false);next.setVisible(false);
-                CbTime.setVisible(true);back_button.setVisible(true);doctor_name.setVisible(true);choose_time_label.setVisible(true);complete_button.setVisible(true);
+                specialty.setVisible(false);CBspecialty.setVisible(false);dayChooser.setVisible(false);monthChooser.setVisible(false);searchLB.setVisible(false);searchFld.setVisible(false);search_button.setVisible(false);
+                CBdoctor_by_specialty.setVisible(false);CBdoctor_by_lastname.setVisible(false);next.setVisible(false);date_label.setVisible(false);
+                CbTime.setVisible(true);back_button.setVisible(true);doctor_name.setVisible(true);choose_time_label.setVisible(true);complete_button.setVisible(true);client_name_label.setVisible(true);client_name_field.setVisible(true);birth_label.setVisible(true);dateChooser.setVisible(true);
 
 
             }
@@ -267,8 +283,9 @@ public class swing {
         back_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                specialty.setVisible(true);CBspecialty.setVisible(true);dayChooser.setVisible(true);monthChooser.setVisible(true);searchLB.setVisible(true);searchFld.setVisible(true);search_button.setVisible(true);date_label.setVisible(true);CBdoctor_by_specialty.setVisible(CBdoctor_by_specialty_visible);CBdoctor_by_lastname.setVisible(CBdoctor_by_lastname_visible);next.setVisible(true);
-                CbTime.setVisible(false);back_button.setVisible(false);doctor_name.setVisible(false);choose_time_label.setVisible(false);complete_button.setVisible(false);
+                specialty.setVisible(true);CBspecialty.setVisible(true);dayChooser.setVisible(true);monthChooser.setVisible(true);searchLB.setVisible(true);searchFld.setVisible(true);search_button.setVisible(true);
+                CBdoctor_by_specialty.setVisible(CBdoctor_by_specialty_visible);CBdoctor_by_lastname.setVisible(CBdoctor_by_lastname_visible);next.setVisible(true);date_label.setVisible(true);
+                CbTime.setVisible(false);back_button.setVisible(false);doctor_name.setVisible(false);choose_time_label.setVisible(false);complete_button.setVisible(false);client_name_label.setVisible(false);client_name_field.setVisible(false);birth_label.setVisible(false);dateChooser.setVisible(false);
 
 
             }
@@ -277,10 +294,18 @@ public class swing {
         complete_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Date dateFromDateChooser = dateChooser.getDate();
+                String dateString = String.format("%1$tY-%1$tm-%1$td", dateFromDateChooser);
+                System.out.println(dateString);
                 try {
-                    int i = statement.executeUpdate("insert into records (doctor_id, month_id, day_id, time) values ("+id+","+monthChooser.getMonth()+","+dayChooser.getDay()+","+CbTime.getSelectedItem()+")");
-                    JOptionPane.showMessageDialog(null, "Завдання виконано успішно!", "Успіх", JOptionPane.INFORMATION_MESSAGE);
+                    int i = statement.executeUpdate("insert into records (doctor_id, month_id, day_id, time, client_name, client_birth) values ("+id+","+monthChooser.getMonth()+","+dayChooser.getDay()+","+CbTime.getSelectedItem()+",'"+client_name_field.getText()+"','"+dateString+"')");
+                    JOptionPane.showMessageDialog(null, "Запис створено успішно!", ":)", JOptionPane.INFORMATION_MESSAGE);
+                    specialty.setVisible(true);CBspecialty.setVisible(true);dayChooser.setVisible(true);monthChooser.setVisible(true);searchLB.setVisible(true);searchFld.setVisible(true);search_button.setVisible(true);
+                    CBdoctor_by_specialty.setVisible(false);CBdoctor_by_lastname.setVisible(false);next.setVisible(true);date_label.setVisible(true);
+                    CbTime.setVisible(false);back_button.setVisible(false);doctor_name.setVisible(false);choose_time_label.setVisible(false);complete_button.setVisible(false);client_name_label.setVisible(false);client_name_field.setVisible(false);birth_label.setVisible(false);dateChooser.setVisible(false);
+                    CBspecialty.setSelectedItem(null);CBdoctor_by_specialty.setSelectedItem(null);CBdoctor_by_lastname.setSelectedItem(null);searchFld.setText("");
                 } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "Не вдалось створити запис!", ":(", JOptionPane.ERROR_MESSAGE);
                     throw new RuntimeException(ex);
                 }
             }
