@@ -87,6 +87,9 @@ public class swing {
         CBdoctor_by_specialty.setSelectedItem(null);
 
 
+
+
+
         JRadioButton searchLB = new JRadioButton("Пошук за прізвищем");
         searchLB.setFont(label_font);
         searchLB.setBounds(530,20,350,40);

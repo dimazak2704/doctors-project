@@ -56,76 +56,52 @@ public class test extends JFrame {
         JFrame frame = new JFrame("doctor's appointment");
         frame.setResizable(false);
         frame.setLayout(null);
-        frame.setBounds(width/2-600,height/2-360,1200,720);
+        frame.setBounds(width / 2 - 600, height / 2 - 360, 1200, 720);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
-        JLabel label = new JLabel("Фамілія Імя По батькові");
-        label.setBounds(350,20,500,40);
-        label.setHorizontalTextPosition(JLabel.CENTER);
-        label.setHorizontalAlignment(JLabel.CENTER);
-        label.setFont(new Font("Times New Roman", Font.BOLD, 30));
-
-
-        JLabel label1 = new JLabel("Виберіть час запису");
-        label1.setFont(new Font("Times New Roman", Font.BOLD, 30));
-        label1.setBounds(450,100,300,40);
-        label1.setHorizontalTextPosition(JLabel.CENTER);
-        label1.setHorizontalAlignment(JLabel.CENTER);
-
-
-        JComboBox comboBox = new JComboBox();
-        comboBox.setBounds(500,150,200,40);
-        comboBox.setFont(new Font("Times New Roman", Font.PLAIN, 30));
-        comboBox.addItem("123");
-        comboBox.addItem("123");
-        comboBox.addItem("123");
-        comboBox.setSelectedItem(null);
-
-        JLabel client_name_label = new JLabel("Введіть повне ім'я пацієнта");
-        client_name_label.setHorizontalAlignment(JLabel.CENTER);
-        client_name_label.setHorizontalTextPosition(JLabel.CENTER);
-        client_name_label.setFont(new Font("Times New Roman", Font.BOLD, 30));
-        client_name_label.setBounds(350,220,500,40);
-
-        JTextField client_name_field = new JTextField();
-        client_name_field.setHorizontalAlignment(JTextField.CENTER);
-        client_name_field.setBounds(350,280,500,40);
-
-        JLabel date_label = new JLabel("Вкажіть дату народження пацієнта");
-        date_label.setBounds(350,350,500,40);
-        date_label.setHorizontalAlignment(JLabel.CENTER);
-        date_label.setHorizontalTextPosition(JLabel.CENTER);
-        date_label.setFont(new Font("Times New Roman", Font.BOLD, 30));
-
-        JDateChooser dateChooser = new JDateChooser();
-        dateChooser.setBounds(525,420,150,50);
-        dateChooser.setSelectableDateRange(mindate,maxdate);
-        dateChooser.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-        dateChooser.setDateFormatString("yyyy-MM-dd");
+//        JRadioButton tomato = new JRadioButton("Tomato");
+//        JRadioButton barbeque = new JRadioButton("Barbeque");
+//        ButtonGroup group = new ButtonGroup();
+//        group.add(tomato);
+//        group.add(barbeque);
+//        JPanel radiopanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+//        radiopanel.add(tomato);
+//        radiopanel.add(barbeque);
+//        frame.getContentPane().add(radiopanel);
+//        radiopanel.setBounds(240,330,110,70);
+//        radiopanel.setOpaque(false);
+//        tomato.setForeground(Color.white);
+//        barbeque.setForeground(Color.white);
+//
+//
+//
+//        frame.setLayout(null);
+//        frame.setSize(600, 700);
+//
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.setVisible(true);
 
 
 
-        JButton button = new JButton("Підтвердити");
-        button.setBounds(400,550,400,100);
+        JPanel panel = new JPanel(new GridLayout(0,1));
+        JRadioButton myRadio;
+        ButtonGroup group = new ButtonGroup();
+        for(int i = 0; i<100; i++){
+            myRadio = new JRadioButton("text" + i);
+            group.add(myRadio);
+            panel.add(myRadio);
+        }
 
-
-
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                Date dateFromDateChooser = dateChooser.getDate();
-                String dateString = String.format("%1$tY-%1$tm-%1$td", dateFromDateChooser);
-                System.out.println(dateString);
-                dateChooser.setDate(null);
-
-
-                //JOptionPane.showMessageDialog(null, "Завдання виконано успішно!", "Успіх", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-
-        frame.add(label);frame.add(label1);frame.add(comboBox);frame.add(button);frame.add(client_name_label);frame.add(client_name_field);frame.add(dateChooser);frame.add(date_label);
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setVisible(false);
+        scrollPane.setBounds(200,200,200,200);
+        frame.getContentPane().add(scrollPane);
         frame.setVisible(true);
+
+        Thread.sleep(1000);
+        scrollPane.setVisible(true);
+        Thread.sleep(1000);
+        panel.removeAll();
     }
 }
