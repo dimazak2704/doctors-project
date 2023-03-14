@@ -1,15 +1,10 @@
-import com.toedter.calendar.JDateChooser;
-
 import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.text.ParseException;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Formatter;
 
 public class test extends JFrame {
 
@@ -51,57 +46,106 @@ public class test extends JFrame {
 
 
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, SQLException {
 
-        JFrame frame = new JFrame("doctor's appointment");
+
+        JFrame frame = new JFrame("doctor's appointment");                                  //Frame
         frame.setResizable(false);
         frame.setLayout(null);
-        frame.setBounds(width / 2 - 600, height / 2 - 360, 1200, 720);
+        frame.setBounds(width/2-600,height/2-360,1200,720);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        //frame.getContentPane().setBackground(new Color(255,240,225));
 
 
-//        JRadioButton tomato = new JRadioButton("Tomato");
-//        JRadioButton barbeque = new JRadioButton("Barbeque");
-//        ButtonGroup group = new ButtonGroup();
-//        group.add(tomato);
-//        group.add(barbeque);
-//        JPanel radiopanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-//        radiopanel.add(tomato);
-//        radiopanel.add(barbeque);
-//        frame.getContentPane().add(radiopanel);
-//        radiopanel.setBounds(240,330,110,70);
-//        radiopanel.setOpaque(false);
-//        tomato.setForeground(Color.white);
-//        barbeque.setForeground(Color.white);
+
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/doctors_appointment", "test", "root");
+        Statement statement = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        ResultSet resultSet = statement.executeQuery("select client_name, client_birth, time from records where doctor_id = 4 and month_id = 3 and day_id = 1");
+
+
+
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        resultSet.last();
+        int rowCount = resultSet.getRow();
+        resultSet.beforeFirst();
+
+        Object[][] data = new Object[rowCount][columnCount];
+
+        int row = 0;
+        while (resultSet.next()) {
+            for (int col = 0; col < columnCount; col++) {
+                data[row][col] = resultSet.getObject(col+1);
+            }
+            row++;
+        }
+
+
+
+        String[] columnNames = { "Ім'я", "Рік народження", "Час запису" };
+
+
+
+//        JTable client_tabl=new JTable(data,columnNames){
+//            public boolean isCellEditable(int row, int column) {
+//                return false;
+//            }
+//        };
+//        client_tabl.setBounds(100, 75, 1000, 495);
+//        client_tabl.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+//        client_tabl.setRowHeight(25);
+//        JTableHeader header = client_tabl.getTableHeader();
+//        header.setFont(new Font("Times New Roman", Font.BOLD, 20));
+//        client_tabl.setBounds(100,75,1000,495);
+//        JScrollPane sp=new JScrollPane(client_tabl);
+//        sp.setBounds(100, 75, 1000, 495);
+//        frame.add(sp);
+
+
+
+
+//        for(int i=0; i<3; i++){
+//            model.addColumn(columnNames[i]);
+//        }
+//        for(int i=0; i< data.length; i++){
+//            model.addRow(data[i]);
+//        }
+
+
+        // Створити об'єкт моделі таблиці зі стовпцями та їх назвами
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+        // Додати рядки до моделі таблиці
+        Object[] rowData1 = {1, "Іван", "Петров"};
+        Object[] rowData2 = {2, "Марія", "Сидорова"};
+        for(int i=0; i< data.length; i++){
+            model.addRow(data[i]);
+        }
+
+        // Створити JTable з моделлю таблиці
+        JTable table = new JTable(model);
+
+        // Встановити координати та розміри для таблиці
+        table.setBounds(100, 75, 1000, 495);
+
+        // Створити JScrollPane для JTable
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        // Встановити координати та розміри для JScrollPane
+        scrollPane.setBounds(100, 75, 1000, 495);
+
+        // Створити JFrame і додати JScrollPane
+        JFrame frame1 = new JFrame("Приклад таблиці");
+        frame1.setLayout(null);
+        frame1.add(scrollPane);
+
+        // Встановити координати та розміри для JFrame
+        frame1.setSize(1200, 720);
+        frame1.setVisible(true);
+//        frame.add(table);frame.add(scrollPane);
 //
-//
-//
-//        frame.setLayout(null);
-//        frame.setSize(600, 700);
-//
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        frame.setVisible(true);
 
 
-
-        JPanel panel = new JPanel(new GridLayout(0,1));
-        JRadioButton myRadio;
-        ButtonGroup group = new ButtonGroup();
-        for(int i = 0; i<100; i++){
-            myRadio = new JRadioButton("text" + i);
-            group.add(myRadio);
-            panel.add(myRadio);
-        }
-
-        JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setVisible(false);
-        scrollPane.setBounds(200,200,200,200);
-        frame.getContentPane().add(scrollPane);
-        frame.setVisible(true);
-
-        Thread.sleep(1000);
-        scrollPane.setVisible(true);
-        Thread.sleep(1000);
-        panel.removeAll();
     }
 }
