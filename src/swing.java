@@ -115,7 +115,7 @@ public class swing {
             public void actionPerformed(ActionEvent e) {
                 CBdoctor_by_lastname.removeAllItems();
                 try {
-                    resultSet[0] = statement.executeQuery("select doctor.first_name, doctor.last_name, doctor.middle_name, specialty.specialty_name from doctor inner join specialty on specialty.specialty_id=doctor.doctor_id where doctor.last_name='"+ searchFld.getText() +"'");
+                    resultSet[0] = statement.executeQuery("select doctor.first_name, doctor.last_name, doctor.middle_name, specialty.specialty_name from doctor inner join specialty on specialty.specialty_id=doctor.specialty_id where doctor.last_name='"+ searchFld.getText() +"'");
                     while (resultSet[0].next()){
                         System.out.println(resultSet[0].getString(2)+ " "+ resultSet[0].getString(1) + " "+ resultSet[0].getString(3)+ " "+ resultSet[0].getString(4));
                         CBdoctor_by_lastname.addItem(resultSet[0].getString(2)+ " "+ resultSet[0].getString(1) + " "+ resultSet[0].getString(3)+ " "+ resultSet[0].getString(4));
