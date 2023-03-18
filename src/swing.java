@@ -54,7 +54,7 @@ public class swing {
         CBspecialty.setBounds(30,100,400,40);
         CBspecialty.setFont(combobox_font);
         CBspecialty.setSelectedItem(null);
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/doctors_appointment", "test", "root");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/doctors_appointment", "acc_name", "password");
         Statement statement = con.createStatement();
         final ResultSet[] resultSet = {statement.executeQuery("select specialty_name from specialty")};
         while(resultSet[0].next()){CBspecialty.addItem(resultSet[0].getString(1));}
